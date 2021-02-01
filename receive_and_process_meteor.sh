@@ -9,7 +9,11 @@
 
 cd /home/pi/weather/
 
-timeout $6 rtl_fm -M raw -s 140000 -f 137.1M -E dc -g 65 -p 0.5 ${3}
+timeout $6 rtl_fm -M raw -s 140000 -f 137.1M -E dc -g 65 -p 0.5 ${3} | sox -t raw -esigned-integer -b16 -r 140000 -c 2 - -t wav ${3}.wav # receive raw | wav
+
+meteor_demod -O 8 -f 128 -m qpsk -o ${3}.s ${3}.wav 
+
+medet ${3}.s meteor_capture -r 65 -g 65 -b 64
 
 #sudo timeout -s SIGINT $6 `sh /home/pi/weather/predict/receive_and_demod_meteor.sh ${3}`
 
